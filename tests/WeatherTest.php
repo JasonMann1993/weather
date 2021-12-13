@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the jasonmann/weather.
+ *
+ * (c) jasonmann <jasonmann.top>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Jasonmann\Weather\Tests;
 
 use GuzzleHttp\Client;
@@ -22,18 +31,18 @@ class WeatherTest extends TestCase
         $client = \Mockery::mock(Client::class);
 
         // 指定将会产生的行为 （在后续的测试中将会按下面的参数来调用）。
-        $client->allows()->get('https://restapi.amap.com/v3/weather/weatherInfo',[
+        $client->allows()->get('https://restapi.amap.com/v3/weather/weatherInfo', [
             'query' => [
                 'key' => 'mock-key',
                 'city' => '深圳',
                 'output' => 'json',
                 'extensions' => 'base',
-            ]
+            ],
         ])->andReturn($response);
 
         // 将 `getHttpClient` 方法替换为上面创建的 http client 为返回值的模拟方法。
-        $w = \Mockery::mock(Weather::class,['mock-key'])->makePartial();
-        $w->allows()->getHttpClient()->andReturn($client);// $client 为上面创建的模拟实例
+        $w = \Mockery::mock(Weather::class, ['mock-key'])->makePartial();
+        $w->allows()->getHttpClient()->andReturn($client); // $client 为上面创建的模拟实例
 
         // 然后调用 `getWeather` 方法，并断言返回值为模拟的返回值
         $this->assertSame(['success' => true], $w->getWeather('深圳'));
@@ -116,9 +125,9 @@ class WeatherTest extends TestCase
         $client = \Mockery::mock(Client::class);
         $client->allows()
             ->get(new AnyArgs())// 由于上面的用例已经验证过参数传递，所以这里就不关心参数了。
-            ->andThrow(new \Exception('request timeout'));// 当调用 get 方法时会抛出异常。
+            ->andThrow(new \Exception('request timeout')); // 当调用 get 方法时会抛出异常。
 
-        $w = \Mockery::mock(Weather::class,['mock-key'])->makePartial();
+        $w = \Mockery::mock(Weather::class, ['mock-key'])->makePartial();
         $w->allows()->getHttpClient()->andReturn($client);
 
         // 接着需要断言调用时会产生异常。

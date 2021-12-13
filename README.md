@@ -2,6 +2,7 @@
 
 <p align="center">:rainbow: 基于高德开放平台的 PHP 天气信息组件。</p>
 
+[![StyleCI](https://github.styleci.io/repos/437746465/shield?branch=master)](https://github.styleci.io/repos/437746465?branch=master)
 
 ## 安装
 ```sh

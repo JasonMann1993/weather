@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the jasonmann/weather.
+ *
+ * (c) jasonmann <jasonmann.top>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Jasonmann\Weather;
 
 use GuzzleHttp\Client;
@@ -26,15 +35,15 @@ class Weather
         $this->guzzleOptions = $options;
     }
 
-    public function getWeather($city, $type = 'base',$format = 'json')
+    public function getWeather($city, $type = 'base', $format = 'json')
     {
         $url = 'https://restapi.amap.com/v3/weather/weatherInfo';
 
-        if(!\in_array(\strtolower($format), ['xml','json'])) {
+        if (!\in_array(\strtolower($format), ['xml', 'json'])) {
             throw new InvalidArgumentException('Invalid response format: '.$format);
         }
 
-        if (!\in_array(\strtolower($type),['base','all'])){
+        if (!\in_array(\strtolower($type), ['base', 'all'])) {
             throw new InvalidArgumentException('Invalid type value(base/all): '.$type);
         }
 
@@ -42,19 +51,18 @@ class Weather
             'key' => $this->key,
             'city' => $city,
             'output' => \strtolower($format),
-            'extensions' =>  \strtolower($type),
+            'extensions' => \strtolower($type),
         ]);
 
-        try{
-            $response = $this->getHttpClient()->get($url,[
-                'query' => $query
+        try {
+            $response = $this->getHttpClient()->get($url, [
+                'query' => $query,
             ])->getBody()->getContents();
 
             return 'json' === $format ? \json_decode($response, true) : $response;
-        }catch (\Exception $exception){
-            throw new HttpException($exception->getMessage(),$exception->getCode(),$exception);
+        } catch (\Exception $exception) {
+            throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
-
     }
 
     public function getLiveWeather($city, $format = 'json')
